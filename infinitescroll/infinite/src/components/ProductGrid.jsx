@@ -1,15 +1,15 @@
-import { useEffect } from "react"
 import ProductCard from "./ProductCard"
+import {memo} from "react"
 
-const ProductGrid = ({ products}) => {
+const ProductGrid = ({ products = [] , onProductClick}) => {
   
     return (
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+        <div className="product-grid">
 
             {
                 products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
+                    <ProductCard key={product.id} product={product} onProductClick={onProductClick} />
                 ))
             }
 
@@ -19,4 +19,4 @@ const ProductGrid = ({ products}) => {
 
 }
 
-export default ProductGrid
+export default memo(ProductGrid)

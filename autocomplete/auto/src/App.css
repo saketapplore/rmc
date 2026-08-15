@@ -182,16 +182,3 @@
     border-right-color: var(--border);
   }
 }
-
-.product-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 1.25rem;
-}
-
-.scroll-sentinel {
-  min-height: 40px;
-  margin-top: 1rem;
-  padding: 1rem 0;
-  text-align: center;
-}
