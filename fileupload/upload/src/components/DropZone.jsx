@@ -136,16 +136,20 @@ const DropZone = ({files, setFiles, errors, setErrors}) => {
             Or
           </p>
 
-          <label className="inline-block bg-blue-500 text-white px-5 py-2 rounded-lg cursor-pointer">
-              Choose files
+          <label 
+          htmlFor="file-input"
+          className="inline-block bg-blue-500 text-white px-5 py-2 rounded-lg cursor-pointer">
+              Choose files</label>
+
               <input 
+              id="file-input"
               type="file"
               multiple
               accept=".jpg, .jpeg, .png, .pdf"
               className="hidden"
               onChange={handleFileChange}
               />
-          </label>
+          
 
           <p className="text-sm text-gray-500 mt-4">
         Supported: JPG, PNG, PDF
