@@ -49,7 +49,8 @@ const ProductForm = ({ product , onSubmit , onCancel}) => {
             price: Number(price),
             brand: brand.trim(),
             category: category.trim(),
-            rating: Number(rating)
+            rating: Number(rating),
+            thumbnail: thumbnail.trim() || product?.thumbnail || 'https://cdn.dummyjson.com/product-images/beauty/essence-mascara-lash-princess/thumbnail.webp',
         }
 
         onSubmit(productData)
@@ -59,7 +60,7 @@ const ProductForm = ({ product , onSubmit , onCancel}) => {
     return (
 
         <div className='fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50'>
-            <div className='bg-white rounded-xl p-6 w-full max-w-lg'>
+            <div className='bg-white rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto'>
 
                 <h2 className='text-xl font-bold mb-6'>
                     {product ? 'Edit Product' : 'Add Product'}
@@ -78,6 +79,9 @@ const ProductForm = ({ product , onSubmit , onCancel}) => {
                          onChange={(e) => setTitle(e.target.value)}
                          className='w-full border rounded-lg p-2'
                         />
+                        {errors.title && (
+                            <p className='text-red-500 text-sm'>{errors.title}</p>
+                        )}
                       </div>
                       <div>
                         <label className='block mb-1 font-medium'>
@@ -98,7 +102,11 @@ const ProductForm = ({ product , onSubmit , onCancel}) => {
                          type='number'
                          value={price}
                          onChange={(e) => setPrice(e.target.value)}
+                         className='w-full border rounded-lg p-2'
                         />
+                        {errors.price && (
+                            <p className='text-red-500 text-sm'>{errors.price}</p>
+                        )}
                       </div>
                       <div>
                         <label className='block mb-1 font-medium'>
@@ -121,6 +129,9 @@ const ProductForm = ({ product , onSubmit , onCancel}) => {
                          onChange={(e) => setCategory(e.target.value)}
                          className='w-full border rounded-lg p-2'
                         />
+                        {errors.category && (
+                            <p className='text-red-500 text-sm'>{errors.category}</p>
+                        )}
                       </div>
                       <div>
                         <label className='block mb-1 font-medium'>
@@ -130,6 +141,7 @@ const ProductForm = ({ product , onSubmit , onCancel}) => {
                          type='number'
                          min="0"
                          max="5"
+                         step="0.1"
                          value={rating}
                          onChange={(e) => setRating(e.target.value)}
                          className='w-full border rounded-lg p-2'

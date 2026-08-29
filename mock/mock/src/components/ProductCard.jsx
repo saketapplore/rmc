@@ -1,11 +1,13 @@
-export const ProductCard = ({product, onEdit}) => {
+export const ProductCard = ({product, onEdit, onDelete, onView}) => {
 
     return (
-        <div className='bg-white rounded-xl shadow-sm overflow-hidden'>
+        <div 
+        onClick={() => onView(product)}
+        className='cursor-pointer bg-white rounded-xl shadow-sm overflow-hidden'>
 
             <div className='h-52 bg-gray-100'>
                 <img 
-                src={product.image}
+                src={product.thumbnail}
                 alt={product.name}
                 className='w-full h-full object-cover'
                 />
@@ -38,12 +40,20 @@ export const ProductCard = ({product, onEdit}) => {
                 </div>
 
                 <div className='flex gap-3 mt-4'>
-                     <button 
-                     onClick={() => onEdit(product)}
+                     <button
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        onEdit(product);
+                     }}
                      className='flex-1 border border-blue-600 text-blue-600 py-2 rounded-lg'>
                         Edit
                      </button>
-                     <button className='flex-1 bg-red-500 text-white py-2 rounded-lg'>
+                     <button 
+                     onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete(product.id);
+                     }}
+                     className='flex-1 bg-red-500 text-white py-2 rounded-lg'>
                         Delete
                      </button>
                 </div>

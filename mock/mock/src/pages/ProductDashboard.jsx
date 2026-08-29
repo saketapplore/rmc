@@ -5,19 +5,22 @@ import SearchBar from '../components/SearchBar'
 import CategoryFilter from '../components/CategoryFilter'
 import SortDropdown from '../components/SortDropdown'
 import ProductForm from '../components/ProductForm'
+import ProductDetailsModal from '../components/ProductDetailsModal'
 
 const ProductDashboard = () => {
 
     const [products, setProducts] = useState([])
     const [searchTerm, setSearchTerm] = useState('')
     const [category, setCategory] = useState('all')
-    const [loading , setLoading] = useState(false)
+    const [loading , setLoading] = useState(true)
     const [error, setError] = useState(null)
     const [sortOption, setSortOption] = useState('default')
     const [isFormOpen, setIsFormOpen] = useState(false)
     const [editingProduct, setEditingProduct] = useState(null)
-
-
+    const [selectedProduct, setSelectedProduct] = useState(null)
+    const [currentPage, setCurrentPage] = useState(1)
+    const productsPerPage = 80
+    
     const handleAddProduct = () => {
         setEditingProduct(null)
         setIsFormOpen(true)
@@ -102,8 +105,8 @@ const ProductDashboard = () => {
 
             setProducts((prevProducts) => 
               prevProducts.map((product) => 
-               product.id === productData.id 
-                ? productData 
+               product.id === editingProduct.id 
+                ? { ...product, ...productData, id: editingProduct.id }
                 : product
             )
             )
@@ -113,16 +116,64 @@ const ProductDashboard = () => {
                 productData,
                 ...prevProducts
             ])
+            setCurrentPage(1)
+            setSearchTerm('')
+            setCategory('all')
+            setSortOption('default')
         }
       
         setIsFormOpen(false)
         setEditingProduct(null)
     }
 
+    const handleDeleteProduct = (productId) => {
+    
+        const confirmed = window.confirm(
+            'Are you sure you want to delete this product?'
+        )
+
+        if(!confirmed) return;
+
+        setProducts((prevProducts) => 
+          prevProducts.filter(
+            (product) => product.id !== productId
+           )
+        )
+    }
+
     const handleEditProduct = (product) => {
         setEditingProduct(product)
         setIsFormOpen(true)
     }
+
+    const handleViewProduct = (product) => {
+        setSelectedProduct(product)
+        setIsFormOpen(false)
+    }
+
+    const handleClearFilters = () => {
+        setSearchTerm('')
+        setCategory('all')
+        setSortOption('default')
+    }
+
+    useEffect(() => {
+        setCurrentPage(1);
+      }, [searchTerm, category, sortOption]);
+
+    const totalPages = Math.ceil(filteredProducts.length / productsPerPage)
+
+    const paginatedProducts = useMemo(() => {
+      
+       const startIndex = (currentPage - 1) * productsPerPage
+
+       const endIndex = startIndex + productsPerPage
+       
+       return filteredProducts.slice(
+        startIndex, endIndex
+       )
+
+    }, [filteredProducts, currentPage, productsPerPage])
 
     return (
         
@@ -157,22 +208,21 @@ const ProductDashboard = () => {
                 setSortOption={setSortOption}
                />
 
+               <ProductGrid products={paginatedProducts}
+                     onEdit={handleEditProduct}
+                     onDelete={handleDeleteProduct}
+                     onView={handleViewProduct}
+                     loading={loading}
+                     error={error}
+                     onRetry={loadProducts}
+                     onClear={handleClearFilters}
+                    />
                {
-                loading && (
-                    <p>Loading...</p>
-                )
-               }
-
-               {
-                error && (
-                    <p className='text-red-500'>Error: {error}</p>
-                )
-               }
-
-               {
-                !loading && !error && (
-                    <ProductGrid products={filteredProducts}
-                     onEdit={handleEditProduct}/>
+                selectedProduct && (
+                    <ProductDetailsModal 
+                     product={selectedProduct}
+                     onClose={() => setSelectedProduct(null)}
+                    />
                 )
                }
                {
